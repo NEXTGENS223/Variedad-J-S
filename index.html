@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tu Tienda Online</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style id="app-style">
+        :root {
+            --primary-color: #7EB77F;
+            --secondary-color: #A5D6A7;
+            --accent-color: #4CAF50;
+            --light-color: #E8F5E9;
+            --text-color: #2E2E2E;
+            --white: #FFFFFF;
+            --gray-light: #F5F5F5;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --footer-bg: #E8FDF0;
+            --footer-btn-bg: #A5D6A7;
+            --footer-btn-hover: #7EB77F;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-color);
+            background-color: var(--light-color);
+            line-height: 1.6;
+        }
+        
+        .navbar {
+            background-color: var(--white);
+            box-shadow: var(--shadow);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .intro-section {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+        
+        .intro-title {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .category-selector {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+        
+        .category-btn {
+            background-color: var(--white);
+            color: var(--text-color);
+            border: 2px solid var(--secondary-color);
+            border-radius: 25px;
+            padding: 8px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover, 
+        .category-btn.active {
+            background-color: var(--secondary-color);
+            color: var(--white);
+            transform: translateY(-2px);
+        }
+        
+        .search-container {
+            margin-bottom: 2rem;
+            position: relative;
+        }
+        
+        .search-container input {
+            border: none;
+            border-radius: 25px;
+            padding: 12px 20px;
+            width: 100%;
+            box-shadow: var(--shadow);
+        }
+        
+        .search-container .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 3rem;
+        }
+        
+        .product-card {
+            background-color: var(--white);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-image {
+            height: 220px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-color: var(--gray-light);
+        }
+        
+        .product-image .product-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .product-info {
+            padding: 1.5rem;
+        }
+        
+        .product-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+        
+        .product-price {
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+        }
+        
+        .buy-btn {
+            background-color: var(--accent-color);
+            color: var(--white);
+            border: none;
+            border-radius: 25px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+        
+        .buy-btn:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+        
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+        
+        .modal-header {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border-radius: 12px 12px 0 0;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .whatsapp-btn {
+            background-color: #25D366;
+            color: var(--white);
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #128C7E;
+        }
+        
+        .loader {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .spinner-border {
+            color: var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+            
+            .category-selector {
+                overflow-x: auto;
+                flex-wrap: nowrap;
+                justify-content: flex-start;
+                padding-bottom: 10px;
+            }
+            
+            .category-btn {
+                white-space: nowrap;
+            }
+        }
+
+        /* ── Mini Map Styles ─────────────────────────────────────────── */
+        .mini-map-container {
+            background-color: var(--white);
+            border-radius: 12px;
+            padding: 1rem;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        .mini-map-title {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        .mini-map-container iframe {
+            width: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        @media (min-width: 768px) {
+            .mini-map-container iframe {
+                height: 250px;
+            }
+        }
+        @media (max-width: 767px) {
+            .mini-map-container iframe {
+                height: 200px;
+            }
+        }
+
+        /* ── New footer/banner styles ────────────────────────────────── */
+        .footer-banner {
+            background-color: var(--footer-bg);
+            padding: 1rem; 
+            text-align: center;
+            border-top: 1px solid #DDEEDD;
+            margin-top: 2rem;
+        }
+        .footer-banner .map-btn {
+            background-color: var(--footer-btn-bg);
+            color: var(--white);
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 25px;
+            font-weight: 500;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .footer-banner .map-btn:hover {
+            background-color: var(--footer-btn-hover);
+            transform: translateY(-2px);
+            text-decoration: none;
+            color: var(--white);
+        }
+
+        /* Modal image styling */
+        .modal-image-container img {
+            object-fit: cover;
+            width: 100%;
+            height: auto;
+            max-height: 200px;
+            border-radius: 8px;
+        }
+
+        /* Ensure product cards fill image container */
+        .product-image .product-img {
+            object-fit: cover; 
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="javascript:void(0)">
+                <i class="fas fa-store me-2"></i>Variedad J&S
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0)">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0)">Nosotros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="javascript:void(0)">Contacto</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="intro-section">
+            <h2 class="intro-title">Bienvenidos a Tu Variedad J&S</h2>
+
+        </div>
+
+        <div class="search-container">
+            <input type="text" id="search-input" class="form-control" placeholder="Buscar productos...">
+            <span class="search-icon"><i class="fas fa-search"></i></span>
+        </div>
+        
+        <div class="category-selector">
+            <button class="category-btn active" data-category="all">Todos</button>
+            <button class="category-btn" data-category="tecnologia">Tecnología</button>
+            <button class="category-btn" data-category="belleza">Belleza</button>
+            <button class="category-btn" data-category="decoracion">Decoración</button>
+            <button class="category-btn" data-category="hogar">Hogar</button>    
+            <button class="category-btn" data-category="pinateria">Piñatería</button>
+            <button class="category-btn" data-category="electrodomestico">Electrodoméstico</button>
+            <button class="category-btn" data-category="herramientas">Herramientas</button>
+            <button class="category-btn" data-category="joyeria">Joyería y accesorios</button>
+            <button class="category-btn" data-category="ropa-deportiva">Ropa deportiva</button>
+            <button class="category-btn" data-category="jugueteria">Juguetería</button>
+
+        </div>
+
+        <div class="loader">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="mt-2">Buscando productos...</p>
+        </div>
+        
+        <div class="products-grid" id="products-container">
+            <!-- Products will be dynamically inserted here -->
+        </div>
+            <!-- ── Mini Map Section ───────────────────────────────────────── -->
+            <div class="mini-map-container">
+                <h5 class="mini-map-title">Nuestra Ubicación</h5>
+                <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3976.920214929293!2d-75.46187!3d10.40196!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8ef5f9c90e947d5cb%3A0x1d986b3c9aa9a122!2sVillas%20de%20la%20Candelaria%2C%20Cartagena%20de%20Indias%2C%20Bol%C3%ADvar%2C%20Colombia!5e0!3m2!1ses-419!2sco!4v1713973865033!5m2!1ses-419!2sco"
+                    width="600"
+                    height="450"
+                    style="border:0;"
+                    allowfullscreen=""
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+                        <!-- ── New footer/banner ───────────────────────────────────────── -->
+        <div class="footer-banner">
+            <a
+                href="https://maps.app.goo.gl/ENZgZa3WCQ42vxyr7"
+                target="_blank"
+                rel="noopener"
+                class="map-btn">
+                <i class="fas fa-map-marker-alt me-2"></i>Cómo llegar
+            </a>
+        </div>
+    </div>
+            </div>
+
+
+
+
+    <!-- Purchase Modal -->
+    <div class="modal fade" id="purchaseModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Detalles de compra</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- START: Product Image -->
+                    <div class="modal-image-container text-center mb-4">
+                        <img id="modal-product-image" src="" alt="Producto" />
+                    </div>
+                    <!-- END: Product Image -->
+                    <div class="text-center mb-4">
+                        <h4 id="modal-product-title"></h4>
+                        <h5 id="modal-product-price" class="text-success"></h5>
+                    </div>
+                    <p>Puedes realizar tu compra a través de los siguientes métodos:</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <a href="javascript:void(0)" class="btn whatsapp-btn" id="whatsapp-btn">
+                        <i class="fab fa-whatsapp me-2"></i>Comprar por WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script id="app-script">
+        $(document).ready(function() {
+            // 1) shuffle helper
+            function shuffle(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+
+            // Mock product data (now each item has imageUrl instead of imageColor)
+            const products = [
+
+                //PRODUCTOS DE JUGUETERIA
+                {
+                    id: 1,
+                    title: "Peluche Stitch",
+                    price: "$price",
+                    category: "jugueteria",
+                    imageUrl: "producto_1.jpg"
+                },
+                {
+                    id: 2,
+                    title: "Peluche Ucurumy",
+                    price: "$price",
+                    category: "jugueteria",
+                    imageUrl: "producto_2.jpg"
+                },
+                {
+                    id: 3,
+                    title: "Peluche",
+                    price: "$price",
+                    category: "jugueteria",
+                    imageUrl: "producto_3.jpg"
+                },
+                {
+                    id: 4,
+                    title: "peluche",
+                    price: "$price",
+                    category: "jugueteria",
+                    imageUrl: "producto_4.jpg"
+                   
+                },
+                
+                //Hogar
+                {
+                    id: 5,
+                    title: "Termo Stanley Verde",
+                    price: "$price",
+                    category: "hogar",
+                    imageUrl: "producto_5.jpg"
+                },
+                {
+                    id: 6,
+                    title: "Termo Stanley Negro",
+                    price: "$price",
+                    category: "hogar",
+                    imageUrl: "producto_6.jpg"
+                },
+                {
+                    id: 7,
+                    title: "Termo Stanley Rosa",
+                    price: "$price",
+                    category: "hogar",
+                    imageUrl: "producto_7.jpg"
+                },
+                {
+                    id: 8,
+                    title: "Termo Stanley Morado",
+                    price: "$price",
+                    category: "hogar",
+                    imageUrl: "producto_8.jpg"
+                },
+
+            ];
+
+            // 1) Randomize order on each load
+            shuffle(products);
+
+            // Function to display products
+            function displayProducts(productsToShow) {
+                const container = $('#products-container');
+                container.empty();
+
+                productsToShow.forEach(product => {
+                    // pick up the actual image URL or fallback
+                    const imgSrc = product.imageUrl || 'https://via.placeholder.com/200';
+                    // build card html
+                    const card = `
+                        <div class="product-card" data-id="${product.id}" data-category="${product.category}">
+                            <div class="product-image">
+                                <!-- show product image -->
+                                <img
+                                    src="${imgSrc}"
+                                    alt="${product.title}"
+                                    class="product-img" 
+                                />
+                            </div>
+                            <div class="product-info">
+                                <h3 class="product-title">${product.title}</h3>
+                                <div class="product-price">${product.price}</div>
+                                <button
+                                    class="buy-btn"
+                                    data-product-id="${product.id}"
+                                    data-product-title="${product.title}"
+                                    data-product-price="${product.price}"
+                                >
+                                    <i class="fas fa-shopping-cart me-2"></i>Comprar
+                                </button>
+                            </div>
+                        </div>`;
+                    container.append(card);
+                });
+
+                // Re-attach event listeners for buy buttons
+                $('.buy-btn').click(function() {
+                    const productId    = $(this).data('product-id');
+                    const productTitle = $(this).data('product-title');
+                    const productPrice = $(this).data('product-price');
+                    // Get the full product object (to read imageUrl)
+                    const product = products.find(p => p.id === productId);
+
+                    // Set modal text
+                    $('#modal-product-title').text(productTitle);
+                    $('#modal-product-price').text(productPrice);
+
+                    // ensure the modal shows the same image
+                    const imgUrl = product.imageUrl || 'https://via.placeholder.com/200';
+                    $('#modal-product-image')
+                        .attr('src', imgUrl)
+                        .attr('alt', productTitle);
+
+                    // Setup WhatsApp link
+                    const message = `Hola, estoy interesado/a en comprar: ${productTitle} por ${productPrice}. ¿Está disponible?`;
+                    const encodedMessage = encodeURIComponent(message);
+                    $('#whatsapp-btn').attr('href', `https://wa.me/1234567890?text=${encodedMessage}`);
+
+                    // Show modal
+                    const purchaseModal = new bootstrap.Modal(document.getElementById('purchaseModal'));
+                    purchaseModal.show();
+                });
+            }
+
+            // Initial display of all products
+            displayProducts(products);
+            
+            // Category filtering
+            $('.category-btn').click(function() {
+                $('.category-btn').removeClass('active');
+                $(this).addClass('active');
+                
+                const selectedCategory = $(this).data('category');
+                let filteredProducts;
+                
+                if (selectedCategory === 'all') {
+                    filteredProducts = products;
+                } else {
+                    filteredProducts = products.filter(product => product.category === selectedCategory);
+                }
+                
+                displayProducts(filteredProducts);
+            });
+            
+            // Search functionality
+            $('#search-input').on('input', function() {
+                const searchTerm = $(this).val().toLowerCase().trim();
+                
+                if (searchTerm.length > 0) {
+                    // Show loader
+                    $('.loader').show();
+                    $('#products-container').hide();
+                    
+                    // Simulate search delay
+                    setTimeout(() => {
+                        const filteredProducts = products.filter(product => 
+                            product.title.toLowerCase().includes(searchTerm)
+                        );
+                        
+                        displayProducts(filteredProducts);
+                        
+                        // Hide loader and show results
+                        $('.loader').hide();
+                        $('#products-container').show();
+                    }, 600);
+                } else {
+                    // Reset to show all products if search is empty
+                    displayProducts(products);
+                }
+            });
+        });
+    </script>
+</body>
+<footer onclick="window.location.href='/about'"
+  style="
+    background-color: #1a202c;
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  "
+  onmouseover="this.style.backgroundColor='#2d3748'"
+  onmouseout="this.style.backgroundColor='#1a202c'"
+>
+  <p style="margin: 0; font-size: 14px;">
+    © 2025 NextGenSWebsite. Todos los derechos reservados.
+  </p>
+</footer>
+</html>
